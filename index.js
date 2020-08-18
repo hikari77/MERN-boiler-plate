@@ -1,8 +1,15 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
-mongoose.connect('mongodb+srv://bosco:20070107hg@mern-boiler-plate.iq214.mongodb.net/MERN-boiler-plate?retryWrites=true&w=majority',
+const config = require('./config/key');
+
+
+const { User } = require('./models/user');
+
+mongoose.connect(config.mongoURI,
     {
         useNewUrlParser: true
     })
@@ -12,11 +19,21 @@ mongoose.connect('mongodb+srv://bosco:20070107hg@mern-boiler-plate.iq214.mongodb
     .catch(err => console.error(err))
 
 
-    
-app.get('/', (req, res) => {
-    res.send('hello from express')
-});
+app.use(bodyParser.urlencoded({ extended : true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
+app.post('/api/users/register', (req, res) => {
+    const user = new User(req.body)
+    user.save((err, userData) => {
+        if(err) return res.json({ success: false.err })
+    })
+    return res.status(200)
+})
+
+app.get('/', (req, res) => {
+    res.json({"hi":  "hihi=="})
+})
 
 
 app.listen(5000);
