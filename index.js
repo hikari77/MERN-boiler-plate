@@ -23,8 +23,11 @@ app.use(bodyParser.urlencoded({ extended : true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+
+// route
 app.post('/api/users/register', (req, res) => {
-    const user = new User(req.body)
+    const user = new User(req.body);
+    
     user.save((err, userData) => {
         if(err) return res.json({ success: false.err })
     })
